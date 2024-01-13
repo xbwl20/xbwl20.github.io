@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo</title>
+  <style>
+    body {
+      /* background-image: url('https://pbs.twimg.com/card_img/1742247805069197312/0grlAeGM?format=png&name=small'); */
+      /* 替换为你的背景图路径 */
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      background-color: #3a1851;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    form {
+      text-align: center;
+    }
+
+    textarea {
+      width: 300px;
+      height: 100px;
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <form id="myForm">
+      <div style="background-color: #3b2b63;width: 600px;height: 300px;">
+        <textarea id="textInput" style="background-color: #3b2b63;width: 600px;color: #fff;height: 300px;padding: 10px;" placeholder="您可以输入'SELECT * FROM ETHEREUM.TRANSACTIONS LIMIT 10'尝试查询" ></textarea>
+      </div>
+      <br>
+      <button type="button" style="color: #fff;background: #000;" id="wait" onclick="makeAjaxRequest()">run query</button>
+    </form>
+    <div id="result" style="color: #fff;display: block;"></div>
+  </div>
+  <script>
+    document.getElementById("textInput").value = "SELECT * FROM ETHEREUM.TRANSACTIONS LIMIT 10"
+    function makeAjaxRequest() {
+      var textInputValue = document.getElementById("textInput").value;
+
+      // 创建XMLHttpRequest对象
+      var xhr = new XMLHttpRequest();
+      document.getElementById("wait").innerText='Please wait...'
+      // 配置POST请求，这里的url需要替换为实际的API端点
+      xhr.open("POST", "https://proxy.api.spaceandtime.app/v1/sql", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("accept", "application/json");
+      xhr.setRequestHeader("apikey", "sxt_OCiD4yM7Y7_fgcF3qAeeyVRrKYs4bmiK5dP");
+      // 处理响应
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          // 处理服务器返回的数据
+          console.log(response);
+          document.getElementById("result").innerHTML = JSON.stringify(response)
+        }
+      };
+      
+      // 发送POST请求，将输入的文本作为请求体
+      xhr.send(JSON.stringify({ 'sqlText': textInputValue }));
+    }
+  </script>
+</body>
+
+</html>
